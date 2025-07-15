@@ -3,7 +3,9 @@ import { useSidebar } from "../context/SidebarContext";
 import SpaceDashboardIcon from '@mui/icons-material/SpaceDashboard';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
-import SettingsIcon from '@mui/icons-material/Settings';
+import ClassIcon from '@mui/icons-material/Class';
+import SchoolIcon from '@mui/icons-material/School';
+import FeedIcon from '@mui/icons-material/Feed';
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
@@ -26,31 +28,24 @@ const navItems: NavItem[] = [
     path: "/",
   },
   {
-    name: "System",
-    divider: true,
+    icon: <ClassIcon />,
+    name: "Kelas",
+    path: "/class",
   },
   {
-    icon: <SettingsIcon />,
-    name: "Pengaturan Sistem",
+    icon: <FeedIcon />,
+    name: "Nilai",
     subItems: [
       {
-        name: "Menu",
-        path: "/settings/menu",
+        name: "Input Nilai",
+        path: "/grading"
       },
       {
-        name: "Role",
-        path: "/settings/role",
-      },
-      {
-        name: "Akun User",
-        path: "/settings/user-account",
-      },
-      {
-        name: "Profil Akun",
-        path: "/settings/profile",
+        name: "Rekap Nilai",
+        path: "/grade-recap"
       },
     ],
-  },
+  }
 ];
 
 const AppSidebar = () => {
@@ -66,9 +61,8 @@ const AppSidebar = () => {
   const subMenuRefs = useRef<Record<string, HTMLDivElement | null>>({});
 
   const isActive = useCallback(
-    (path: string) => location === path,
+    (path: string) => location === path || location.startsWith(`${path}/`),
     [location]
-    
   );
 
   useEffect(() => {
@@ -110,7 +104,7 @@ const AppSidebar = () => {
   };
 
   const renderMenuItems = (items: NavItem[]) => (
-    <ul className="flex flex-col gap-4">
+    <ul className="flex flex-col gap-3">
       {items.map((nav, index) =>
         nav.divider ? (
           <li key={`divider-${index}`}>
@@ -145,7 +139,7 @@ const AppSidebar = () => {
                     : "lg:justify-start")
                 }
               >
-                <span className="w-6 h-6 flex items-center justify-center mr-3 text-gray-700 active:text-blue-600">
+                <span className={`w-6 h-6 flex items-center justify-center ${isExpanded || isHovered ? 'mr-3' : ''} ${openSubmenu ? 'text-blue-600' : 'text-gray-700'}`}>
                   {nav.icon}
                 </span>
                 {(isExpanded || isHovered || isMobileOpen) && (
@@ -154,10 +148,10 @@ const AppSidebar = () => {
                 {(isExpanded || isHovered || isMobileOpen) && (
                   <ExpandMoreIcon
                     className={
-                      "ml-auto w-5 h-5 text-gray-500 transition-transform duration-200 " +
+                      "ml-auto w-5 h-5 transition-transform duration-200 " +
                       (openSubmenu?.index === index
                         ? "rotate-180 text-blue-500"
-                        : "")
+                        : "text-gray-500")
                     }
                   />
                 )}
@@ -173,7 +167,7 @@ const AppSidebar = () => {
                       : "hover:bg-blue-50 text-gray-700")
                   }
                 >
-                  <span className="w-6 h-6 flex items-center justify-center mr-3 text-blue-600">
+                  <span className="w-6 h-6 flex items-center justify-center mr-3">
                     {nav.icon}
                   </span>
                   {(isExpanded || isHovered || isMobileOpen) && (

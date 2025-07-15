@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import { ClassProvider } from "@/context/ClassContext";
 
 export const metadata: Metadata = {
   title: "Outcome Based Education",
@@ -16,7 +17,9 @@ export default function RootLayout({
       <body
         className={`antialiased`}
       >
-        {children}
+        <ClassProvider>
+          {children}
+        </ClassProvider>
       </body>
     </html>
   );
