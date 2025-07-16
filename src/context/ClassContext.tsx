@@ -1,6 +1,7 @@
 "use client";
 
 import { classData } from "@/data/classData";
+import { ClassCourse } from "@/types";
 import React, { createContext, useContext, useState, ReactNode } from "react";
 
 type ClassContextType = {

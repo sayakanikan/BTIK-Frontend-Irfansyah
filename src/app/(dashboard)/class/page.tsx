@@ -7,6 +7,7 @@ import { RadialBarChart, RadialBar, ResponsiveContainer, PolarAngleAxis, Tooltip
 import { Collapse, MenuItem, Select, TextField, InputLabel, FormControl } from "@mui/material";
 import Link from "next/link";
 import { useClassContext } from "@/context/ClassContext";
+import { ClassCourse } from "@/types";
 
 const Class = () => {
   const { classes } = useClassContext();
@@ -142,7 +143,7 @@ const Class = () => {
                           <PolarAngleAxis type="number" domain={[0, 100]} angleAxisId={0} tick={false} />
                           <RadialBar background dataKey="value" cornerRadius={10} />
 
-                          <Tooltip formatter={(value) => ["Progress input nilai"]} contentStyle={{ fontSize: "12px", zIndex: "99999" }} />
+                          <Tooltip formatter={() => ["Progress input nilai"]} contentStyle={{ fontSize: "12px", zIndex: "99999" }} />
                           <text x="50%" y="50%" textAnchor="middle" dominantBaseline="middle" className="fill-gray-500 font-semibold text-sm">
                             {item.inputProgress}%
                           </text>
@@ -164,7 +165,7 @@ const Class = () => {
                         fontWeight: 500,
                       }}
                     >
-                      <Link href={`/class/detail/${item.id}`}>Konfigurasi</Link>
+                      <Link href={`/class/${item.id}`}>Konfigurasi</Link>
                     </Button>
                     <Button
                       variant="outlined"
@@ -179,7 +180,7 @@ const Class = () => {
                       }}
                       disabled={!item.configCompleted}
                     >
-                      Input Nilai
+                      <Link href={`/class/${item.id}/grade`}>Input Nilai</Link>
                     </Button>
                     <Button
                       variant="outlined"

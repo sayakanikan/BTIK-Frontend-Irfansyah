@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 
 export default function UserDropdown() {
   const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -30,7 +31,7 @@ export default function UserDropdown() {
     <div ref={dropdownRef} className="relative">
       <button onClick={toggleDropdown} className="flex items-center text-gray-700 dropdown-toggle cursor-pointer">
         <span className="mr-3 overflow-hidden rounded-full h-11 w-11">
-          <img src="/assets/images/user/owner.jpg" alt="User" />
+          <Image width={100} height={100} src="/assets/images/user/owner.jpg" alt="User" />
         </span>
 
         <span className="block mr-1 font-medium text-theme-sm">Irfansyah</span>

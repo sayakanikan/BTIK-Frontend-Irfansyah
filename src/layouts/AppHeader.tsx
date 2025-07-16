@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { useSidebar } from "../context/SidebarContext";
 import Link from "next/link";
 import UserDropdown from "../components/header/UserDropdown";
+import Image from "next/image";
 
 const AppHeader: React.FC = () => {
   const [isApplicationMenuOpen, setApplicationMenuOpen] = useState(false);
@@ -81,7 +82,9 @@ const AppHeader: React.FC = () => {
           </button>
 
           <Link href="/" className="lg:hidden">
-            <img
+            <Image
+              width={100}
+              height={100}
               className="block max-w-13 max-h-13"
               src="/assets/favicon.ico"
               alt="Logo"

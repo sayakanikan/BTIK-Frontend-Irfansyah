@@ -1,4 +1,4 @@
-type ClassCourse = {
+export type ClassCourse = {
   id: number;
   name: string;
   semester: string;
@@ -9,47 +9,48 @@ type ClassCourse = {
   components: GradeComponent[];
 };
 
-type GradeComponent = {
+export type GradeComponent = {
   id: number;
   name: "Tugas" | "UTS" | "UAS" | "Kuis" | "Proyek";
   weight: number;
-  contributions: number[];
+  contributions: number[]; 
 };
 
-type Student = {
-  id: string;
+export type Student = {
+  id: number;
   name: string;
   nim: string;
+  class_id: number;
 };
 
-type StudentGrade = {
-  studentId: string;
+export type StudentGrade = {
+  studentId: number;
   grades: {
     [componentId: string]: {
-      [chapterName: string]: number;
+      [chapterIndex: number]: number;
     };
   };
   finalScore: number;
 };
 
-type GradeSummary = {
+export type GradeSummary = {
   student: Student;
   componentScores: Record<string, number>;
   finalScore: number;
   letterGrade: "A" | "B" | "C" | "D" | "E";
 };
 
-type ImportResult = {
-  successCount: number;
-  failedCount: number;
-  errors: {
-    row: number;
-    message: string;
-  }[];
-};
+// export type ImportResult = {
+//   successCount: number;
+//   failedCount: number;
+//   errors: {
+//     row: number;
+//     message: string;
+//   }[];
+// };
 
-type ExportOptions = {
-  format: "xlsx" | "csv" | "pdf";
-  includeSummary: boolean;
-  selectedClassId: string;
-};
+// export type ExportOptions = {
+//   format: "xlsx" | "csv" | "pdf";
+//   includeSummary: boolean;
+//   selectedClassId: string;
+// };

@@ -4,10 +4,9 @@ import SpaceDashboardIcon from '@mui/icons-material/SpaceDashboard';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import ClassIcon from '@mui/icons-material/Class';
-import SchoolIcon from '@mui/icons-material/School';
-import FeedIcon from '@mui/icons-material/Feed';
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import Image from "next/image";
 
 type NavItem = {
   name: string;
@@ -31,20 +30,6 @@ const navItems: NavItem[] = [
     icon: <ClassIcon />,
     name: "Kelas",
     path: "/class",
-  },
-  {
-    icon: <FeedIcon />,
-    name: "Nilai",
-    subItems: [
-      {
-        name: "Input Nilai",
-        path: "/grading"
-      },
-      {
-        name: "Rekap Nilai",
-        path: "/grade-recap"
-      },
-    ],
   }
 ];
 
@@ -261,7 +246,7 @@ const AppSidebar = () => {
         <Link href='/'>
           {isExpanded || isHovered || isMobileOpen ? (
             <div className="flex flex-row gap-2 text-2xl font-bold items-center">
-              <img
+              <Image
                 src='/assets/favicon.ico'
                 alt='Logo'
                 width={50}
@@ -270,7 +255,7 @@ const AppSidebar = () => {
               OBE Dashboard
             </div>
           ) : (
-            <img
+            <Image
               src='/assets/favicon.ico'
               alt='Logo'
               width={50}

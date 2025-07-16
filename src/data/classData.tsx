@@ -1,3 +1,5 @@
+import { ClassCourse } from "@/types";
+
 export const classData: ClassCourse[] = [
   {
     id: 1,
