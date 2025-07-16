@@ -6,26 +6,43 @@ import { studentData, studentGradeData } from "@/data/studentData";
 import { Box, Button, Card, Collapse, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Typography } from "@mui/material";
 import FilterAltIcon from "@mui/icons-material/FilterAlt";
 import { useParams, useRouter } from "next/navigation";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { getLetterGrade } from "@/lib/LetterGrade";
 import { GradeSummary, StudentGrade } from "@/types";
 
 const Grade = () => {
-  const { id } = useParams();
   const router = useRouter();
-  const { classes } = useClassContext();
-  const [isOpenFilter, setIsOpenFilter] = useState<boolean>(false);
-  const [searchQuery, setSearchQuery] = useState<string>("");
-  const [tempSearchQuery, setTempSearchQuery] = useState<string>("");
+  const { id } = useParams();
+  const { classes, updateClass } = useClassContext();
+  const [searchQuery, setSearchQuery] = useState("");
+  const [tempSearchQuery, setTempSearchQuery] = useState("");
   const [studentGrades, setStudentGrades] = useState<StudentGrade[]>([]);
   const [gradeSummaries, setGradeSummaries] = useState<GradeSummary[]>([]);
+  const [isOpenFilter, setIsOpenFilter] = useState(false);
 
-  const classData = classes.find((cls) => cls.id === Number(id));
-  const chapterCount = classData?.chapterCount || 5;
+  const classData = useMemo(() => classes.find((cls) => cls.id === Number(id)), [classes, id]);
+  const students = useMemo(() => {
+    return studentData.filter((student) => student.class_id === Number(id)).filter((student) => (searchQuery.trim() === "" ? true : (student.name + student.nim).toLowerCase().includes(searchQuery.toLowerCase())));
+  }, [id, searchQuery]);
+  const components = useMemo(() => classData?.components ?? [], [classData]);
 
-  const students = studentData.filter((student) => student.class_id === Number(id)).filter((student) => (searchQuery.trim() === "" ? true : (student.name + student.nim).toLowerCase().includes(searchQuery.toLowerCase())));
+  const chapterCount = classData?.chapterCount ?? 5;
 
-  const components = classData?.components ?? [];
+  const studentGradesMap = useMemo(() => {
+    const map: Record<number, StudentGrade> = {};
+    studentGrades.forEach((sg) => {
+      map[sg.studentId] = sg;
+    });
+    return map;
+  }, [studentGrades]);
+
+  useEffect(() => {
+    if (!classData) return;
+    const initialStudentIds = studentData.filter((student) => student.class_id === Number(id)).map((s) => s.id);
+
+    const existingGrades = studentGradeData.filter((g) => initialStudentIds.includes(g.studentId));
+    setStudentGrades(existingGrades);
+  }, [classData, id]);
 
   const handleChange = (studentId: number, componentId: number, chapterIndex: number, value: number) => {
     setStudentGrades((prev) => {
@@ -57,33 +74,38 @@ const Grade = () => {
     });
   };
 
-  const calculateGradeSummaries = useCallback((): GradeSummary[] => {
-    return studentGrades.map((sg) => {
+  useEffect(() => {
+    if (!classData || students.length === 0 || studentGrades.length === 0) {
+      setGradeSummaries([]);
+      return;
+    }
+
+    const summaries: GradeSummary[] = studentGrades.map((sg) => {
       const student = students.find((s) => s.id === sg.studentId)!;
       const componentScores: Record<string, number> = {};
       let totalWeightedScore = 0;
-  
-      classData?.components.forEach((comp) => {
+
+      classData.components.forEach((comp) => {
         const chapterGrades = sg.grades[comp.id] || {};
         let componentScore = 0;
-  
+
         comp.contributions.forEach((pct, babIdx) => {
           const chapterIndex = babIdx + 1;
           const score = chapterGrades[chapterIndex];
-  
+
           if (typeof score === "number") {
             const weighted = (comp.weight / 100) * (pct / 100) * score;
             componentScore += weighted;
           }
         });
-  
+
         componentScores[comp.name] = Number(componentScore.toFixed(2));
         totalWeightedScore += componentScore;
       });
-  
+
       const finalScore = Math.round(totalWeightedScore);
       const letterGrade = getLetterGrade(finalScore);
-  
+
       return {
         student,
         componentScores,
@@ -91,12 +113,19 @@ const Grade = () => {
         letterGrade,
       };
     });
-  }, [studentGrades, students, classData]);
 
-  const calculateProgress = useCallback(() => {
+    setGradeSummaries(summaries);
+  }, [classData, students, studentGrades]);
+
+  const inputProgress = classData?.inputProgress ?? 0;
+  const classId = classData?.id ?? 0;
+
+  useEffect(() => {
+    if (!classId) return;
+
     const totalStudents = students.length;
-    const totalComponents = classData?.components.length || 0;
-    const totalChapters = classData?.chapterCount || 1;
+    const totalComponents = classData!.components.length;
+    const totalChapters = classData!.chapterCount || 1;
     const totalRequiredInputs = totalStudents * totalComponents * totalChapters;
 
     let filled = 0;
@@ -108,15 +137,11 @@ const Grade = () => {
     });
 
     const progress = Math.round((filled / totalRequiredInputs) * 100);
-    return progress;
-  }, [studentGrades, classData]);
 
-  useEffect(() => {
-    if (!classData) return;
-
-    const progress = calculateProgress();
-    classData.inputProgress = progress;
-  }, [calculateProgress]);
+    if (progress !== inputProgress && classId) {
+      updateClass(classId, { inputProgress: progress });
+    }
+  }, [studentGrades, students.length, inputProgress, classId, updateClass, classData]);
 
   const handleSubmit = () => {
     studentGrades.forEach((sg) => {
@@ -128,28 +153,8 @@ const Grade = () => {
       }
     });
 
-    router.push('/class');
-  }
-
-  useEffect(() => {
-    if (classData) {
-      const initialStudentIds = studentData
-        .filter((student) => student.class_id === Number(id))
-        .map((s) => s.id);
-  
-      const existingGrades = studentGradeData.filter((g) =>
-        initialStudentIds.includes(g.studentId)
-      );
-      setStudentGrades(existingGrades);
-    }
-  }, [classData, id]);
-
-  useEffect(() => {
-    if (!classData || students.length === 0 || studentGrades.length === 0) return;
-  
-    const summaries = calculateGradeSummaries();
-    setGradeSummaries(summaries);
-  }, [calculateGradeSummaries]);
+    router.push("/class");
+  };
 
   return (
     <Box className="space-y-6 px-4 py-6 max-w-full">
@@ -288,14 +293,7 @@ const Grade = () => {
                                   minWidth: 90,
                                 }}
                               >
-                                <TextField
-                                  size="small"
-                                  type="number"
-                                  inputProps={{ min: 0, max: 100 }}
-                                  fullWidth
-                                  value={studentGrades.find((g) => g.studentId === student.id)?.grades?.[comp.id]?.[i + 1] || ""}
-                                  onChange={(e) => handleChange(student.id, comp.id, i + 1, Number(e.target.value))}
-                                />
+                                <TextField size="small" type="number" fullWidth value={studentGradesMap[student.id]?.grades?.[comp.id]?.[i + 1] ?? ""} onChange={(e) => handleChange(student.id, comp.id, i + 1, Number(e.target.value))} />
                               </TableCell>
                             ))
                           )}

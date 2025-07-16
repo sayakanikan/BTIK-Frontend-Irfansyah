@@ -5,7 +5,7 @@ import { useClassContext } from "@/context/ClassContext";
 import { GradeComponent } from "@/types";
 import { Alert, Box, Button, Card, Divider, Grid, TextField, Typography } from "@mui/material";
 import { useParams, useRouter } from "next/navigation";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 
 const ClassDetail = () => {
   const { id } = useParams();
@@ -44,7 +44,7 @@ const ClassDetail = () => {
   const getTotalWeight = () => components.reduce((acc, comp) => acc + comp.weight, 0);
   const getContribTotal = (compIdx: number) => components[compIdx].contributions.reduce((acc, val) => acc + val, 0);
 
-  const isValid = useCallback(() => {
+  const isValid = () => {
     const totalWeightValid = getTotalWeight() === 100;
 
     const contribValid = components.every((comp) => {
@@ -53,7 +53,7 @@ const ClassDetail = () => {
     });
 
     return totalWeightValid && contribValid;
-  }, [classes, id, babCountInput]);
+  };
 
   const calculateFinalScore = () => {
     if (!isValid()) return;
@@ -68,7 +68,12 @@ const ClassDetail = () => {
 
   const saveConfiguration = () => {
     if (!classData) return;
-    updateClass(classData.id, { components });
+
+    updateClass(classData.id, {
+      components,
+      configCompleted: isValid(),
+    });
+
     router.push("/class");
   };
 
@@ -84,7 +89,7 @@ const ClassDetail = () => {
       }
       return newVals;
     });
-  
+
     const updatedComponents = components.map((comp) => {
       const newContribs = [...comp.contributions];
       if (babCountInput > newContribs.length) {
@@ -96,25 +101,22 @@ const ClassDetail = () => {
       }
       return { ...comp, contributions: newContribs };
     });
-  
+
     setSampleValues(updatedSample);
     setComponents(updatedComponents);
+
+    if (classData) {
+      updateClass(classData.id, { chapterCount: babCountInput });
+    }
   };
 
   useEffect(() => {
-    const updatedClassData = classes.find((cls) => cls.id === Number(id));
-    if (updatedClassData) {
-      updatedClassData.configCompleted = isValid();
-      updatedClassData.chapterCount = babCountInput;
-      const updatedBabCount = updatedClassData.chapterCount ?? 3;
-      const updatedComponents =
-        updatedClassData.components.map((comp) => ({
-          ...comp,
-          contributions: Array.from({ length: updatedBabCount }, (_, i) => comp.contributions[i] ?? 0),
-        })) ?? [];
-      setComponents(updatedComponents);
+    if (classData && classData.components.length > 0) {
+      setComponents(fixedComponents);
+      setSampleValues(fixedComponents.map(() => Array.from({ length: babCount }, () => 80)));
+      setBabCountInput(babCount);
     }
-  }, [isValid]);
+  }, []);
 
   return (
     <Box className="space-y-5">
@@ -183,7 +185,6 @@ const ClassDetail = () => {
                   const val: string = e.target.value;
                   handleWeightChange(i, val === "" ? 0 : parseInt(val));
                 }}
-                inputProps={{ min: 0, max: 100 }}
                 sx={{ width: 100 }}
                 error={getTotalWeight() !== 100}
               />
@@ -204,7 +205,6 @@ const ClassDetail = () => {
                       const newVal: string = e.target.value;
                       handleContributionChange(i, babIdx, newVal === "" ? 0 : parseInt(newVal));
                     }}
-                    inputProps={{ min: 0, max: 100 }}
                     error={getContribTotal(i) !== 100}
                     helperText={val < 0 || val > 100 ? "Nilai harus antara 0–100" : ""}
                     disabled={comp.weight === 0}
@@ -247,15 +247,17 @@ const ClassDetail = () => {
             </Typography>
             <Grid container spacing={2}>
               {sampleValues[compIdx]?.map((val, babIdx) => (
-                <div className="grid grid-cols-1 md:grid-cols-1 gap-3" key={babIdx}>
+                <div className="grid grid-cols-1 gap-3" key={babIdx}>
                   <TextField
                     fullWidth
                     label={`Bab ${babIdx + 1}`}
                     type="number"
                     size="small"
                     value={val}
-                    onChange={(e) => handleSampleChange(compIdx, babIdx, parseInt(e.target.value))}
-                    inputProps={{ min: 0, max: 100 }}
+                    onChange={(e) => {
+                      const newVal: string = e.target.value;
+                      handleSampleChange(compIdx, babIdx, newVal === "" ? 0 : parseInt(newVal));
+                    }}
                     error={val < 0 || val > 100}
                   />
                 </div>
@@ -268,11 +270,7 @@ const ClassDetail = () => {
           <Button variant="outlined" onClick={calculateFinalScore} disabled={!isValid()} sx={{ textTransform: "none", borderRadius: 2 }}>
             Hitung Nilai Akhir
           </Button>
-          {finalScore !== null && (
-            <Typography variant="h6">
-              🎓 Nilai Akhir: {finalScore}
-            </Typography>
-          )}
+          {finalScore !== null && <Typography variant="h6">🎓 Nilai Akhir: {finalScore}</Typography>}
         </Box>
       </Card>
     </Box>
