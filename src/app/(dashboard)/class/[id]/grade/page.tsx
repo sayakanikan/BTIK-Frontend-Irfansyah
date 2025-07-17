@@ -14,11 +14,12 @@ const Grade = () => {
   const router = useRouter();
   const { id } = useParams();
   const { classes, updateClass } = useClassContext();
-  const [searchQuery, setSearchQuery] = useState("");
-  const [tempSearchQuery, setTempSearchQuery] = useState("");
+  const [searchQuery, setSearchQuery] = useState<string>("");
+  const [tempSearchQuery, setTempSearchQuery] = useState<string>("");
   const [studentGrades, setStudentGrades] = useState<StudentGrade[]>([]);
   const [gradeSummaries, setGradeSummaries] = useState<GradeSummary[]>([]);
-  const [isOpenFilter, setIsOpenFilter] = useState(false);
+  const [isOpenFilter, setIsOpenFilter] = useState<boolean>(false);
+  const [isInitialized, setIsInitialized] = useState<boolean>(false);
 
   const classData = useMemo(() => classes.find((cls) => cls.id === Number(id)), [classes, id]);
   const students = useMemo(() => {
@@ -37,12 +38,19 @@ const Grade = () => {
   }, [studentGrades]);
 
   useEffect(() => {
-    if (!classData) return;
-    const initialStudentIds = studentData.filter((student) => student.class_id === Number(id)).map((s) => s.id);
-
-    const existingGrades = studentGradeData.filter((g) => initialStudentIds.includes(g.studentId));
+    if (!classData || isInitialized) return;
+  
+    const initialStudentIds = studentData
+      .filter((student) => student.class_id === Number(id))
+      .map((s) => s.id);
+  
+    const existingGrades = studentGradeData.filter((g) =>
+      initialStudentIds.includes(g.studentId)
+    );
+  
     setStudentGrades(existingGrades);
-  }, [classData, id]);
+    setIsInitialized(true);
+  }, [classData, id, isInitialized]);
 
   const handleChange = (studentId: number, componentId: number, chapterIndex: number, value: number) => {
     setStudentGrades((prev) => {
