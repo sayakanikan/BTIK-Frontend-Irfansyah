@@ -194,7 +194,7 @@ const Class = () => {
                         fontWeight: 500,
                       }}
                     >
-                      Lihat Rekap
+                      <Link href={`/class/${item.id}/recap`}>Lihat Rekap</Link>
                     </Button>
                   </div>
                 </Card>

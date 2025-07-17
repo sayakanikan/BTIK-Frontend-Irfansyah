@@ -39,15 +39,11 @@ const Grade = () => {
 
   useEffect(() => {
     if (!classData || isInitialized) return;
-  
-    const initialStudentIds = studentData
-      .filter((student) => student.class_id === Number(id))
-      .map((s) => s.id);
-  
-    const existingGrades = studentGradeData.filter((g) =>
-      initialStudentIds.includes(g.studentId)
-    );
-  
+
+    const initialStudentIds = studentData.filter((student) => student.class_id === Number(id)).map((s) => s.id);
+
+    const existingGrades = studentGradeData.filter((g) => initialStudentIds.includes(g.studentId));
+
     setStudentGrades(existingGrades);
     setIsInitialized(true);
   }, [classData, id, isInitialized]);
@@ -166,12 +162,10 @@ const Grade = () => {
 
   return (
     <Box className="space-y-6 px-4 py-6 max-w-full">
-      <Box className="flex justify-between items-start flex-wrap gap-2">
+      <Box className="flex justify-between items-center mb-5">
         <div>
-          <Typography variant="h5" fontWeight={600}>
-            Input Nilai Mahasiswa
-          </Typography>
-          <Typography variant="subtitle2" color="text.secondary">
+          <h1 className="font-medium text-2xl">Input Nilai Mahasiswa</h1>
+          <Typography variant="subtitle1" color="gray">
             {classData?.name} – Semester {classData?.semester}
           </Typography>
         </div>

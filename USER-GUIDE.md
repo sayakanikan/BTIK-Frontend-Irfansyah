@@ -1,6 +1,6 @@
 # 📘 Panduan Pengguna — Dashboard Outcome Based Education (OBE)
 
-Panduan ini ditujukan untuk dosen dan admin akademik yang menggunakan dashboard OBE untuk mengelola penilaian dan pemantauan hasil pembelajaran.
+Panduan ini ditujukan untuk dosen yang menggunakan dashboard OBE untuk mengelola penilaian dan pemantauan hasil pembelajaran.
 
 ---
 
@@ -10,30 +10,30 @@ Panduan ini ditujukan untuk dosen dan admin akademik yang menggunakan dashboard 
 - Setiap kartu kelas berisi:
   - Nama mata kuliah
   - Jumlah mahasiswa
-  - Progress berdasarkan bab/modul
+  - Status konfigurasi nilai
+  - Progress input nilai
 
-🔗 Klik pada kartu kelas untuk melihat rincian bab dan nilai mahasiswa.
+🔗 Klik pada tombol konfigurasi kartu kelas untuk melihat rincian bab dan sampel nilai mahasiswa.
 
 ---
 
 ## 📚 Tampilan Nilai per Bab
 
-- Menampilkan daftar bab dalam mata kuliah
+- Menampilkan daftar bab pada tiap komponen penilaian
 - Di setiap bab:
-  - Masukkan dan edit nilai komponen seperti tugas, kuis, UTS, UAS
+  - Masukkan dan edit nilai
   - Persentase bobot bisa berbeda di tiap kelas
 
 📊 Perhitungan nilai akhir:
-- Nilai akhir = ∑(nilai_komponen × bobot_komponen)
-- Nilai akan dinormalisasi sebelum dihitung
+- Nilai Akhir = ∑(Nilai_Komponen × Bobot_Komponen / 100)
+- Nilai_Komponen = ∑(Nilai_Komponen_per_Bab × Bobot_Bab_dalam_Komponen / 100)
 
 ---
 
-## 📈 Analitik Mahasiswa
+## 📈 Rekap Nilai Mahasiswa
 
-- Lihat distribusi nilai
-- Identifikasi mahasiswa dengan performa rendah
-- Ekspor laporan ke CSV / PDF (fitur ini dalam pengembangan)
+- Lihat nilai mahasiswa yang sudah diinputkan
+- Ekspor laporan ke Excel
 
 ---
 
@@ -42,14 +42,5 @@ Panduan ini ditujukan untuk dosen dan admin akademik yang menggunakan dashboard 
 | Peran   | Akses yang Dimiliki                           |
 |---------|-----------------------------------------------|
 | Dosen   | Kelola kelas dan nilai sendiri                |
-| Admin   | Kelola seluruh data mata kuliah dan laporan   |
-
----
-
-## 💡 Tips
-
-- Gunakan `Ctrl + F` di browser untuk mencari mahasiswa.
-- Perubahan nilai akan disimpan otomatis.
-- Validasi nilai dilakukan sebelum data dikirim ke server.
 
 ---

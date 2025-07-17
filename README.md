@@ -1,6 +1,6 @@
 # Outcome Based Education (OBE)
 
-Platform dashboard berbasis website untuk mendukung proses bisnis Outcome Based Education (OBE), yang dibuat untuk dosen dan administrator akademik. Dibuat menggunakan **Next.js**, **TypeScript**, **Tailwind CSS**, dan **Material UI** untuk modern dan responsive UI Experience.
+Platform dashboard berbasis website untuk mendukung proses bisnis Outcome Based Education (OBE), yang dibuat untuk dosen. Dibuat menggunakan **Next.js**, **TypeScript**, **Tailwind CSS**, dan **Material UI** untuk modern dan responsive UI Experience.
 
 ## 🚀 Tech Stack
 
@@ -23,6 +23,9 @@ BTIK-Frontend-Irfansyah/
 ├── src/
 │   ├── app/              # App Router pages and layouts (Next.js 13+)
 │   ├── components/       # Reusable UI components
+│   ├── context/          # Context di aplikasi
+│   ├── data/             # Dummy data untuk frontend
+│   ├── layouts/          # Reusable Layouts UI
 │   ├── lib/              # Utilities and helper functions
 │   ├── types/            # TypeScript type definitions
 │   └── hooks/            # Custom React hooks

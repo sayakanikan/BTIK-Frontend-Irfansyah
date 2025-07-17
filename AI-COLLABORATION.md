@@ -10,20 +10,26 @@ AI digunakan untuk membantu:
 
 - Saran perancangan UI dan keseluruhan website di awal
 - Menyelesaikan logika kompleks dan manipulasi data
-- Menjelaskan penggunaan library seperti Material UI dan App Router
+- Menjelaskan penggunaan library Material UI, dll
 - Membantu penulisan dokumentasi proyek
 
 ---
 
-## 📌 Contoh Kolaborasi
+## 📌 Kolaborasi
 
 | Tugas                        | Deskripsi                                             | Kontribusi AI                          |
 |-----------------------------|-------------------------------------------------------|----------------------------------------|
 | ✅Perancangan UI           | Merancang UI dan alur dari proyek                 | Menyarankan perancangan alur dari proyek        |
-| ✅ Integrasi Tailwind + MUI  | Menangani konflik class & styling                    | Menyarankan pendekatan hybrid terbaik  |
+| ✅ Membuat logic perhitungan penilaian  | Menangani logic perhitungan penilaian berdasarkan bobot yang diinputkan                    | Pembuatan logic yang cepat dan terstruktur sesuai requirement aplikasi  |
+| ✅ Komponen UI               | Pemahaman library Material UI & export excel          | Memberikan pemahaman penggunaan library tersebut |
 | ✅ Dokumentasi               | Membuat draft README, SOLUTION, dan USER-GUIDE       | Menyusun dokumen awal berbasis prompt  |
-| ✅ Komponen UI               | Menyusun `ScoreTable`, `ClassOverview`, dll          | Memberikan struktur awal dan prop type |
 
+---
+
+## 📜 Riwayat penggunaan AI
+
+- https://chatgpt.com/share/68787010-5390-8005-9752-77a5308c9269
+- https://chatgpt.com/share/6878702d-27d0-8005-aba5-e9728e04743f
 
 ---
 

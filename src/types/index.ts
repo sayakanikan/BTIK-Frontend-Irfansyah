@@ -13,7 +13,7 @@ export type GradeComponent = {
   id: number;
   name: "Tugas" | "UTS" | "UAS" | "Kuis" | "Proyek";
   weight: number;
-  contributions: number[]; 
+  contributions: number[];
 };
 
 export type Student = {
@@ -21,6 +21,7 @@ export type Student = {
   name: string;
   nim: string;
   class_id: number;
+  grade: StudentGrade[];
 };
 
 export type StudentGrade = {
@@ -39,18 +40,3 @@ export type GradeSummary = {
   finalScore: number;
   letterGrade: "A" | "B" | "C" | "D" | "E";
 };
-
-// export type ImportResult = {
-//   successCount: number;
-//   failedCount: number;
-//   errors: {
-//     row: number;
-//     message: string;
-//   }[];
-// };
-
-// export type ExportOptions = {
-//   format: "xlsx" | "csv" | "pdf";
-//   includeSummary: boolean;
-//   selectedClassId: string;
-// };
