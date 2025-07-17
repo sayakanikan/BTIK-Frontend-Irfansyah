@@ -8,7 +8,6 @@ import { useParams } from "next/navigation";
 import React, { useEffect, useMemo, useState } from "react";
 import { getLetterGrade } from "@/lib/LetterGrade";
 import { GradeSummary } from "@/types";
-import * as XLSX from "xlsx";
 import FilterAltIcon from "@mui/icons-material/FilterAlt";
 import { exportToExcel } from "@/lib/ExportExcel";
 

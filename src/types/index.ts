@@ -21,7 +21,7 @@ export type Student = {
   name: string;
   nim: string;
   class_id: number;
-  grade: StudentGrade[];
+  grade?: StudentGrade[];
 };
 
 export type StudentGrade = {

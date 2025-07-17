@@ -5,7 +5,7 @@ import { useClassContext } from "@/context/ClassContext";
 import { GradeComponent } from "@/types";
 import { Alert, Box, Button, Card, Divider, Grid, TextField, Typography } from "@mui/material";
 import { useParams, useRouter } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 
 const ClassDetail = () => {
   const { id } = useParams();
@@ -13,11 +13,14 @@ const ClassDetail = () => {
   const router = useRouter();
   const classData = classes.find((cls) => cls.id === Number(id));
   const babCount = classData?.chapterCount ?? 3;
-  const fixedComponents =
-    classData?.components.map((comp: GradeComponent) => ({
-      ...comp,
-      contributions: Array.from({ length: babCount }, (_, i) => comp.contributions[i] ?? 0),
-    })) ?? [];
+  const fixedComponents = useMemo(() => {
+    return (
+      classData?.components.map((comp: GradeComponent) => ({
+        ...comp,
+        contributions: Array.from({ length: babCount }, (_, i) => comp.contributions[i] ?? 0),
+      })) ?? []
+    );
+  }, [classData, babCount]);
   const [components, setComponents] = useState(fixedComponents);
   const [sampleValues, setSampleValues] = useState(() => fixedComponents.map(() => Array.from({ length: babCount }, () => 80)));
   const [finalScore, setFinalScore] = useState<number>(0);
@@ -116,7 +119,7 @@ const ClassDetail = () => {
       setSampleValues(fixedComponents.map(() => Array.from({ length: babCount }, () => 80)));
       setBabCountInput(babCount);
     }
-  }, []);
+  }, [classData, fixedComponents, babCount]);
 
   return (
     <Box className="space-y-5">
